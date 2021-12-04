@@ -21,7 +21,7 @@ interface TasksListProps {
 export function TasksList({ tasks, toggleTaskDone, removeTask }: TasksListProps) {
   return (
     <FlatList
-      // data={tasks}
+      data={tasks}
       keyExtractor={item => String(item.id)}
       contentContainerStyle={{ paddingBottom: 24 }}
       showsVerticalScrollIndicator={false}
@@ -32,15 +32,17 @@ export function TasksList({ tasks, toggleTaskDone, removeTask }: TasksListProps)
               <TouchableOpacity
                 testID={`button-${index}`}
                 activeOpacity={0.7}
-                style={styles.taskButton}
+                style={item.done === true ? styles.taskButtonDone : styles.taskButton}
                 //TODO - use onPress (toggle task) prop
+                onPress={() => toggleTaskDone(item.id)}
               >
-                <View 
+                <View
                   testID={`marker-${index}`}
                   //TODO - use style prop 
+                  style={item.done === true ? styles.taskMarkerDone : styles.taskMarker}
                 >
-                  { item.done && (
-                    <Icon 
+                  {item.done && (
+                    <Icon
                       name="check"
                       size={12}
                       color="#FFF"
@@ -48,8 +50,10 @@ export function TasksList({ tasks, toggleTaskDone, removeTask }: TasksListProps)
                   )}
                 </View>
 
-                <Text 
+                <Text
                   //TODO - use style prop
+                  style={item.done === true ? styles.taskTextDone : styles.taskText}
+
                 >
                   {item.title}
                 </Text>
@@ -60,6 +64,8 @@ export function TasksList({ tasks, toggleTaskDone, removeTask }: TasksListProps)
               testID={`trash-${index}`}
               style={{ paddingHorizontal: 24 }}
               //TODO - use onPress (remove task) prop
+              onPress={() => removeTask(item.id)}
+
             >
               <Image source={trashIcon} />
             </TouchableOpacity>
@@ -80,6 +86,16 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     marginBottom: 4,
     borderRadius: 4,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  taskButtonDone: {
+    flex: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 12,
+    marginBottom: 4,
+    borderRadius: 4,
+    backgroundColor: 'rgba(25, 61, 223, 0.1)',
     flexDirection: 'row',
     alignItems: 'center'
   },
